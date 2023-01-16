@@ -1,0 +1,72 @@
+uuid: 30c9d712-7573-4434-a505-c0f235c27523
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_paragraphs_target
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - 'Paragraphs Content'
+migration_group: migrate_drupal_7
+label: 'Paragraphs (Objectiu)'
+source:
+  plugin: d7_paragraphs_item
+  bundle: target
+process:
+  type:
+    -
+      plugin: get
+      source: bundle
+  field_target_actions:
+    -
+      plugin: sub_process
+      source: field_target_actions
+      process:
+        target_id:
+          -
+            plugin: paragraphs_lookup
+            tags: 'Paragraphs Content'
+            source: value
+          -
+            plugin: extract
+            index:
+              - id
+        target_revision_id:
+          -
+            plugin: paragraphs_lookup
+            tags:
+              - 'Paragraphs Revisions Content'
+              - 'Paragraphs Content'
+            tag_ids:
+              'Paragraphs Revisions Content':
+                - revision_id
+              'Paragraphs Content':
+                - value
+            source: value
+          -
+            plugin: extract
+            index:
+              - revision_id
+  field_target_title:
+    -
+      plugin: get
+      source: field_target_title
+  field_scope:
+    -
+      plugin: get
+      source: field_scope
+  field_evaluation:
+    -
+      plugin: get
+      source: field_evaluation
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: target
+migration_dependencies:
+  required:
+    - upgrade_d7_paragraphs_type
+  optional:
+    - upgrade_d7_field_instance

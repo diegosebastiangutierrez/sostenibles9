@@ -1,0 +1,50 @@
+uuid: 44c50632-6769-4e87-95a7-3d82edc0596c
+langcode: en
+status: true
+dependencies: {  }
+id: upgrade_d7_paragraphs_target_actions
+class: Drupal\migrate\Plugin\Migration
+field_plugin_method: null
+cck_plugin_method: null
+migration_tags:
+  - 'Drupal 7'
+  - Content
+  - 'Paragraphs Content'
+migration_group: migrate_drupal_7
+label: 'Paragraphs (Acció)'
+source:
+  plugin: d7_paragraphs_item
+  bundle: target_actions
+process:
+  type:
+    -
+      plugin: get
+      source: bundle
+  field_target_action_resource:
+    -
+      plugin: get
+      source: field_target_action_resource
+  field_action_fullness_text:
+    -
+      plugin: get
+      source: field_action_fullness_text
+  field_action_participants_text:
+    -
+      plugin: get
+      source: field_action_participants_text
+  field_action_timing_text:
+    -
+      plugin: get
+      source: field_action_timing_text
+  field_action_to_perform_text:
+    -
+      plugin: get
+      source: field_action_to_perform_text
+destination:
+  plugin: 'entity_reference_revisions:paragraph'
+  default_bundle: target_actions
+migration_dependencies:
+  required:
+    - upgrade_d7_paragraphs_type
+  optional:
+    - upgrade_d7_field_instance
