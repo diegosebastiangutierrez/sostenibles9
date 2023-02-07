@@ -1,0 +1,59 @@
+<?php
+
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\node\Entity\Node;
+
+/**
+ * Implements hook_maestro_engine_process_completed().
+ */
+function project_update_fields_maestro_maestro_engine_process_completed($process) {
+
+  \Drupal::logger('project_update_fields_maestro')->notice('Starting Project fields update');
+
+
+  // Get the project node.
+  $project = Node::load($process->getAttachedEntityIdentifier('step_one'));
+
+  // Load steps_nodes.
+  $step_one_nid = $process->getAttachedEntityIdentifier('step_one_content');
+  $step_two_nid = $process->getAttachedEntityIdentifier('step_two_content');
+  $step_three_nid = $process->getAttachedEntityIdentifier('step_three_content');
+  $step_four_nid = $process->getAttachedEntityIdentifier('step_four_content');
+
+// Load the nodes.
+  $step_one = Node::load($step_one_nid);
+  $step_two = Node::load($step_two_nid);
+  $step_three = Node::load($step_three_nid);
+  $step_four = Node::load($step_four_nid);
+
+  // Update the fields.
+  $project->field_module_one = $step_two->id();
+  $project->field_module_two = $step_three->id();
+  $project->field_module_three = $step_four->id();
+
+  // Get the selected value from project field_type.
+  $selected_type = $project->field_type->value;
+
+  // Check the selected value from project field_type.
+  if ($selected_type == 'triennal') {
+    $step_three = Node::load($process->variables['step_three_content']);
+    $step_four = NULL;
+  }
+  else {
+    $step_four = Node::load($process->variables['step_four_content']);
+    $step_three = NULL;
+  }
+
+  // Update the project node fields.
+  $project->field_module_one = $step_one->id();
+  $project->field_module_two = $step_two->id();
+  if ($step_three) {
+    $project->field_module_three = $step_three->id();
+  }
+  else {
+    $project->field_module_three = $step_four->id();
+  }
+
+  // Save the project node.
+  $project->save();
+}

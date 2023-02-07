@@ -1,0 +1,4 @@
+administer project_update_fields_maestro configuration:
+  title: 'Administer project_update_fields_maestro configuration'
+  description: 'Optional description.'
+  restrict access: true
