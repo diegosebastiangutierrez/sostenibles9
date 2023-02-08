@@ -1,28 +1,29 @@
 <?php
 
-namespace Drupal\project_update_fields_maestro\Engine;
+namespace Drupal\project\Engine;
 
 use Drupal\maestro\Engine\MaestroEngineTaskPluginBase;
 use Drupal\maestro\Engine\MaestroEngineTaskAccessControlHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\node\NodeInterface;
 use Drupal\node\Entity\Node;
 
 /**
- * Project update fields Maestro Engine Task Plugin.
+ * Project Maestro Engine Task Plugin.
  *
  * @MaestroEngineTask(
- *   id = "project_update_fields_maestro",
- *   label = @Translation("Project update fields"),
- *   module = "project_update_fields_maestro"
+ *   id = "project",
+ *   label = @Translation("Project"),
+ *   module = "project"
  * )
  */
-class ProjectUpdateFieldsMaestroTask extends MaestroEngineTaskPluginBase implements MaestroEngineTaskAccessControlHandlerInterface {
+class ProjectUpdateFieldsMaestroTask extends MaestroEngineTaskPluginBase implements MaestroEngineTaskAccessControlHandlerInterface
+{
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $taskID = NULL, $templateMachineName = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, $taskID = NULL, $templateMachineName = NULL)
+  {
     // Add your form elements here.
 
     return $form;
@@ -31,21 +32,24 @@ class ProjectUpdateFieldsMaestroTask extends MaestroEngineTaskPluginBase impleme
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state)
+  {
     // Validate your form elements here.
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state)
+  {
     // Submit your form elements here.
   }
 
   /**
    * {@inheritdoc}
    */
-  public function execute($queueData) {
+  public function execute($queueData)
+  {
 
     // Load the project node.
     $project_node = Node::load($queueData['project']);
@@ -79,8 +83,8 @@ class ProjectUpdateFieldsMaestroTask extends MaestroEngineTaskPluginBase impleme
   /**
    * {@inheritdoc}
    */
-  public function access($task, $queueData) {
+  public function access($task, $queueData)
+  {
     return TRUE;
   }
-
 }
