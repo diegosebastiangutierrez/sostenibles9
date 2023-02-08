@@ -1,0 +1,4 @@
+administer project configuration:
+  title: 'Administer project configuration'
+  description: 'Optional description.'
+  restrict access: true

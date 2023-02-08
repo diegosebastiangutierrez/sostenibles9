@@ -1,0 +1,8 @@
+name: project
+type: module
+description: Provides additional functionality for the site.
+package: Custom
+core_version_requirement: ^9 || ^10
+dependencies:
+  - maestro
+  - maestro_taskconsole
