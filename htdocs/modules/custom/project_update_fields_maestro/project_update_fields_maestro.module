@@ -1,46 +1,45 @@
 <?php
 
-use Drupal\maestro\Engine\MaestroProcess;
+use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\node\Entity\Node;
+use Drupal\maestro\Entity\MaestroProcess;
+
 
 /**
- * Implements hook_maestro_batch_handlers
- */
-function project_update_fields_maestro_maestro_batch_handlers() {
-  return [
-    'project_update_fields_maestro_update_project' => t('Update the project fields.'),
-  ];
-}
 
-/**
 Implements hook_maestro_engine_process_completed().
 */
-
 function project_update_fields_maestro_maestro_engine_process_completed(MaestroProcess $process) {
-// Check if the process completed is for the template with ID 'new_project'.
+
+  // Check if the process completed is for the template with ID 'new_project'.
+
+  \Drupal::logger('project_update_fields_maestro')->notice($process->template->id());
+
   if ($process->template->id() == 'new_project') {
+
     // Load the project node.
-    $project = Node::load($process->entity_id);
-
+    $project = Node::load($process->getAttachedEntity('project')->id());
     // Load the step_one node.
-    $step_one_node = $process->getAttachedEntity('step_one_content');
-
+    $step_one_node = $process->getAttachedEntity('step_one');
     // Load the step_two node.
-    $step_two_node = $process->getAttachedEntity('step_two_content');
-
+    $step_two_node = $process->getAttachedEntity('step_two');
     // Get the selected value from project field_type.
     $selected_type = $project->field_type->value;
-
     // Load the step_three or step_four node based on the selected value.
-    if ($selected_type == 'triennal') {
-      $step_three_node = $process->getAttachedEntity('step_three_content');
+
+    \Drupal::logger('project_update_fields_maestro')->notice($step_one_node->id());
+
+    if ($selected_type == 'triennial') {
+      $step_three_node = $process->getAttachedEntity('step_three');
       $step_four_node = NULL;
     }
     else {
-      $step_four_node = $process->getAttachedEntity('step_four_content');
+      $step_four_node = $process->getAttachedEntity('step_four');
       $step_three_node = NULL;
     }
 
     // Update the project node fields.
+
     $project->field_module_one = ['target_id' => $step_one_node->id()];
     $project->field_module_two = ['target_id' => $step_two_node->id()];
 
@@ -51,19 +50,7 @@ function project_update_fields_maestro_maestro_engine_process_completed(MaestroP
       $project->field_module_three = ['target_id' => $step_four_node->id()];
     }
 
-  // Save the project node.
-  $project->save();
+    // Save the project node.
+    $project->save();
   }
-
-}
-
-function project_update_fields_maestro_update_project($processID, $queueID){
-
-  if($nid = MaestroEngine::getEntityIdentiferByUniqueID($processID, 'nid')) {
-    $node = \Drupal\node\Entity\Node::load($nid);
-    $node->setPublished(FALSE);
-    $node->save();
-  }
-  return TRUE;
-
 }
